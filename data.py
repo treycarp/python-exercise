@@ -1,10 +1,22 @@
 import csv
+from abc import ABC, abstractmethod
 from typing import List
 
 from domain import Book
 
 
-class CsvDataSource:
+class DataSource(ABC):
+
+    @abstractmethod
+    def get_all(self) -> List[Book]:
+        pass
+
+    @abstractmethod
+    def get_one(self, id_: int) -> Book | None:
+        pass
+
+
+class CsvDataSource(DataSource):
     _data = dict()
 
     def __init__(self, file_path: str):
@@ -30,8 +42,8 @@ class CsvDataSource:
 
 class BookRepo:
 
-    def __init__(self):
-        self._data_source = CsvDataSource("hugo_winners.csv")
+    def __init__(self, data_source: DataSource):
+        self._data_source = data_source
 
     def fetch_all(self) -> List[Book]:
         return self._data_source.get_all()
