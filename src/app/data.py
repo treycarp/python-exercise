@@ -1,7 +1,7 @@
 from __future__ import annotations
 import csv
 from abc import ABC, abstractmethod
-from typing import List, Dict, Self
+from typing import List, Dict
 
 from app.domain import Book
 
@@ -59,11 +59,17 @@ class BookRepo:
     def __init__(self, data_source: DataSource):
         self._data_source = data_source
 
-    def fetch_all(self, params: BookParams) -> List[Book]:
-        if params.year is not None:
-            return [d for d in self._data_source.get_all() if d.year == params.year]
+    def fetch_all(self, params: BookParams | None = None) -> List[Book]:
+        if params is not None:
+            return self._fetch_all_with_params(params)
         else:
             return self._data_source.get_all()
 
     def fetch_one(self, id_: int) -> Book | None:
         return self._data_source.get_one(id_)
+
+    def _fetch_all_with_params(self, params: BookParams) -> List[Book]:
+        if params.year is not None:
+            return [d for d in self._data_source.get_all() if d.year == params.year]
+        else:
+            return self._data_source.get_all()
