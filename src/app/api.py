@@ -3,6 +3,7 @@ from flask import Flask, abort, jsonify, request
 from app.boot import bootstrap
 from app.data import BookParams
 
+
 app = bootstrap()
 api = Flask(__name__)
 
