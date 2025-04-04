@@ -7,6 +7,7 @@ from app.domain import Book
 
 
 class DataSource(ABC):
+    """an interface for Book read ops"""
 
     @abstractmethod
     def get_all(self) -> List[Book]:
@@ -18,9 +19,11 @@ class DataSource(ABC):
 
 
 class CsvDataSource(DataSource):
+    """concrete implementation of DataSource interface"""
     _data = dict()
 
     def __init__(self, file_path: str):
+        """read all csv rows into memory"""
         with open(file_path, newline="") as f:
             reader = csv.DictReader(f)
             for row in reader:
@@ -42,6 +45,7 @@ class CsvDataSource(DataSource):
 
 
 class BookParams:
+    """params for filtering Book records"""
 
     def __init__(self, year: int | None = None):
         self.year = year
@@ -55,6 +59,7 @@ class BookParams:
 
 
 class BookRepo:
+    """public api for interacting with a data source to read Book records"""
 
     def __init__(self, data_source: DataSource):
         self._data_source = data_source
